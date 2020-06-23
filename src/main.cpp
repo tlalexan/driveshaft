@@ -210,8 +210,8 @@ int main(int argc, char **argv) {
 
 
     /* Prometheus */
-    // create an http server running on port 8080
-    prometheus::Exposer exposer{"127.0.0.1:8080"};
+    // create an http server running on port 8888
+    prometheus::Exposer exposer{"0.0.0.0:8888"};
     Driveshaft::PrometheusRegistry = std::make_shared<prometheus::Registry>();
     exposer.RegisterCollectable(Driveshaft::PrometheusRegistry);
 
