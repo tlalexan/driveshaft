@@ -50,7 +50,6 @@
 #include "pidfile.h"
 #include <prometheus/exposer.h>
 #include <prometheus/registry.h>
-#include <prometheus/histogram.h>
 
 namespace Driveshaft {
 
@@ -214,12 +213,6 @@ int main(int argc, char **argv) {
     // create an http server running on port 8080
     prometheus::Exposer exposer{"127.0.0.1:8080"};
     Driveshaft::PrometheusRegistry = std::make_shared<prometheus::Registry>();
-    auto& family = prometheus::BuildHistogram()
-                 .Name("metric")
-                 .Help("help string")
-                 .Labels({{"label", "value"}})
-                 .Register(*Driveshaft::PrometheusRegistry);
-
     exposer.RegisterCollectable(Driveshaft::PrometheusRegistry);
 
     /* Enter main loop */

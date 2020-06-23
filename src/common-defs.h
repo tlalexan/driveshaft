@@ -33,6 +33,7 @@
 #include <log4cxx/logger.h>
 #include <snyder/metrics_registry.h>
 #include <prometheus/registry.h>
+#include <prometheus/histogram.h>
 
 namespace Driveshaft {
 
@@ -45,7 +46,6 @@ extern log4cxx::LoggerPtr StatusLogger;
 
 extern std::shared_ptr<Snyder::MetricsRegistry> MetricsRegistry;
 extern std::shared_ptr<prometheus::Registry> PrometheusRegistry;
-
 
 extern uint32_t STATUS_PORT;
 extern uint32_t MAX_JOB_RUNNING_TIME; // Expressed in seconds

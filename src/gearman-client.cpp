@@ -29,6 +29,7 @@
 #include <thread>
 #include "gearman-client.h"
 #include "dist/json/json.h"
+#include <prometheus/histogram.h>
 
 namespace Driveshaft {
 
@@ -307,6 +308,16 @@ gearman_return_t GearmanClient::processJob(gearman_job_st *job_ptr, std::string&
         // the Json interface needs a default, so here goes...
         gearman_ret = (gearman_return_t)(tree["gearman_ret"].asInt());
         return_string.append(tree["response_string"].asString());
+
+        time_t done_ts = time(nullptr);
+        auto& family = prometheus::BuildHistogram()
+                     .Name("request_duration")
+                     .Help("how long it took to process a request")
+                     .Register(*Driveshaft::PrometheusRegistry);
+
+        auto& metric = family.Add({{"function", job_function_name}}, prometheus::Histogram::BucketBoundaries{0.1, 1, 10, 100, 1000});
+
+        metric.Observe(difftime(done_ts, start_ts));
 
         LOG4CXX_INFO(ThreadLogger, "Finished job: function=" << job_function_name << " handle=" << job_handle << " unique=" << job_unique
                                    << " workload=" << job_workload
