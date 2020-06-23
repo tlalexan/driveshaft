@@ -24,6 +24,7 @@ include(FindPThread)
 include(GetBoost)
 include(FindLog4cxx)
 include(FindSnyder)
+include(FindPrometheus)
 include(CheckFunctionExists)
 include(GNUInstallDirs) # use GNU install dirs (e.g. lib64 instead of lib)
 

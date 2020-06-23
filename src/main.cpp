@@ -48,6 +48,9 @@
 #include "main-loop.h"
 #include "version.h"
 #include "pidfile.h"
+#include <prometheus/exposer.h>
+#include <prometheus/registry.h>
+#include <prometheus/histogram.h>
 
 namespace Driveshaft {
 
@@ -57,6 +60,9 @@ static const char* STATUS_LOGGER_NAME = "Status";
 
 // globally accesible metrics registry
 std::shared_ptr<Snyder::MetricsRegistry> MetricsRegistry(new Snyder::MetricsRegistry);
+
+// globally accesible prometheus registry
+std::shared_ptr<prometheus::Registry> PrometheusRegistry;
 
 /* Define the externs from common-defs */
 std::atomic_bool g_force_shutdown(false);
@@ -202,6 +208,19 @@ int main(int argc, char **argv) {
 
     /* Global init */
     curl_global_init(CURL_GLOBAL_ALL);
+
+
+    /* Prometheus */
+    // create an http server running on port 8080
+    prometheus::Exposer exposer{"127.0.0.1:8080"};
+    Driveshaft::PrometheusRegistry = std::make_shared<prometheus::Registry>();
+    auto& family = prometheus::BuildHistogram()
+                 .Name("metric")
+                 .Help("help string")
+                 .Labels({{"label", "value"}})
+                 .Register(*Driveshaft::PrometheusRegistry);
+
+    exposer.RegisterCollectable(Driveshaft::PrometheusRegistry);
 
     /* Enter main loop */
     rc = 0;
