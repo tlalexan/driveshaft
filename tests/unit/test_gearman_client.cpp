@@ -590,6 +590,39 @@ TEST_F(GearmanClientTest, TestProcessJobReturnsGearmanErrorOnInvalidResponseStru
     }
 }
 
+TEST_F(GearmanClientTest, TestProcessJobReturnsSuccessfully) {
+    mockCurlLib.configure(CURLE_OK, CURLE_OK, CURLE_OK, CURL_FORMADD_OK);
+
+    long ok(200);
+    mockCurlLib.configureGetInfo(CURLINFO_RESPONSE_CODE, &ok);
+
+    std::string testResponseValue("TEST RESPONSE");
+    std::stringstream goodResponseStream;
+    goodResponseStream << "{\"gearman_ret\": " << GEARMAN_SUCCESS
+                       << ", \"response_string\": \"" << testResponseValue
+                       << "\"}";
+
+    std::string goodResponse(goodResponseStream.str());
+    auto writeFunc = [goodResponse] (void *userData) {
+        curl_write_func(
+            const_cast<char*>(goodResponse.c_str()), goodResponse.length(),
+            1, userData
+        );
+    };
+
+    mockCurlLib.configureSetOpt(CURLOPT_WRITEDATA, writeFunc);
+
+    std::unique_ptr<GearmanClient> client(
+        new GearmanClient(mockThreadRegistry, mockMetricProxyPoolWrapper, StringSet(), StringSet(), "")
+    );
+
+    std::string gearmanReturnValue;
+    gearman_return_t expectedSuccess = client->processJob(nullptr, gearmanReturnValue);
+    ASSERT_EQ(GEARMAN_SUCCESS, expectedSuccess);
+    ASSERT_EQ(testResponseValue, gearmanReturnValue);
+    ASSERT_TRUE(mockCurlLib.allCleanupRoutinesCalled());
+}
+
 TEST_F(GearmanClientTest, TestWorkerCallbackProcessesJob) {
     mockCurlLib.configure(CURLE_OK, CURLE_OK, CURLE_OK, CURL_FORMADD_OK);
 
