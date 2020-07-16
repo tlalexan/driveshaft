@@ -32,6 +32,7 @@
 #include <time.h>
 #include "common-defs.h"
 #include "thread-registry.h"
+#include "metric-proxy.h"
 #include "driveshaft-config.h"
 
 namespace Driveshaft {
@@ -45,10 +46,8 @@ public:
     ~MainLoop() = default;
 
 private:
-    void startStatusThread();
     bool setupSignals() const noexcept;
     void doShutdown(uint32_t wait) noexcept;
-    void checkRunningConfigAndRegistry() noexcept;
 
     MainLoop() = delete;
     MainLoop(const MainLoop&) = delete;
@@ -59,6 +58,7 @@ private:
     std::string m_config_filename;
     DriveshaftConfig m_config;
     ThreadRegistryPtr m_thread_registry;
+    MetricProxyPtr m_metric_proxy;
     std::shared_ptr<PoolWatcher> m_pool_watcher;
 };
 

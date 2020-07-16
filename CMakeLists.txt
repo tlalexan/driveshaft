@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.7 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 # includes
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
@@ -18,16 +18,22 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 include(Compiler)
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+include(FindThreads)
+list(APPEND DRIVESHAFT_LINK_LIBRARIES Threads::Threads)
+include(FindPrometheus)
 include(FindCurl)
 include(FindGearman)
-include(FindPThread)
 include(GetBoost)
 include(FindLog4cxx)
-include(FindSnyder)
 include(CheckFunctionExists)
 include(GNUInstallDirs) # use GNU install dirs (e.g. lib64 instead of lib)
 
 mark_as_advanced(CLEAR CMAKE_INSTALL_PREFIX)
+
+## Uncomment the below to disable optimizations for debugging
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 
 add_subdirectory(src bin/)
 
