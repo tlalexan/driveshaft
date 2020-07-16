@@ -41,7 +41,7 @@ class MainLoop {
 public:
     // treat this class as a singleton. you really, really don't want more
     // than one in your process.
-    MainLoop(const std::string& config_file);
+    MainLoop(const std::string &config_file, const std::string &exporter_addr);
     void run();
     ~MainLoop() = default;
 

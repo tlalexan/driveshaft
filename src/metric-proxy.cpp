@@ -27,7 +27,7 @@
 
 namespace Driveshaft {
 
-MetricProxy::MetricProxy(const char *metricAddress) noexcept
+MetricProxy::MetricProxy(const std::string &metricAddress) noexcept
     : m_exporter{metricAddress} // ←-- starts the exporter
     , m_registry(new prometheus::Registry()) {
     LOG4CXX_DEBUG(MainLogger, "Started metric exporter on " << metricAddress);

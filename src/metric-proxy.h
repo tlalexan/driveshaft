@@ -54,7 +54,7 @@ public:
 
 class MetricProxy : public MetricProxyInterface {
 public:
-    explicit MetricProxy(const char *metricAddress) noexcept;
+    explicit MetricProxy(const std::string &metricAddress) noexcept;
     ~MetricProxy() noexcept override;
 
     void reportJobSuccess(const std::string &pool_name, const std::string &function_name, double duration) noexcept override;

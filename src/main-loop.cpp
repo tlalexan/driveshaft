@@ -110,11 +110,11 @@ private:
     MetricProxyPtr m_metrics_proxy;
 };
 
-MainLoop::MainLoop(const std::string& config_file) :
+MainLoop::MainLoop(const std::string &config_file, const std::string &exporter_addr) :
     m_config_filename(config_file),
     m_config(),
     m_thread_registry(new ThreadRegistry),
-    m_metric_proxy(new MetricProxy("0.0.0.0:8888")),
+    m_metric_proxy(new MetricProxy(exporter_addr)),
     m_pool_watcher(new ThreadPoolWatcher(m_thread_registry, m_metric_proxy)) {
     if (!setupSignals()) {
         throw std::runtime_error("Unable to setup signals");
