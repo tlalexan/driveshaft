@@ -10,6 +10,9 @@ set(PACKAGE_STRING    "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 set(PACKAGE_TARNAME   "${PACKAGE_NAME}-${PACKAGE_VERSION}")
 set(PACKAGE_BUGREPORT "https://github.com/keyurdg/driveshaft/issues")
 
+# for man page
+set(MAN_INSTALL_DIR share/man/man1)
+
 project(${PACKAGE_NAME} C CXX ASM)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -51,4 +54,4 @@ add_custom_command(OUTPUT driveshaft.1
 add_custom_target (manpage ALL DEPENDS driveshaft.1)
 
 install(TARGETS driveshaft-bin)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/driveshaft.1 DESTINATION ${CMAKE_INSTALL_PREFIX}${MAN_INSTALL_DIR}/man1/)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/driveshaft.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/${MAN_INSTALL_DIR})
