@@ -48,4 +48,7 @@ add_custom_command(OUTPUT driveshaft.1
   COMMAND txt2man -t "driveshaft" -s 1 -v "User Manual" driveshaft.1.txt > driveshaft.1
   DEPENDS driveshaft.1.txt)
 
-add_custom_target (manpage DEPENDS driveshaft.1)
+add_custom_target (manpage ALL DEPENDS driveshaft.1)
+
+install(TARGETS driveshaft-bin)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/driveshaft.1 DESTINATION ${CMAKE_INSTALL_PREFIX}${MAN_INSTALL_DIR}/man1/)
